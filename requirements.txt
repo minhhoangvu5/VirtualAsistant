@@ -1,0 +1,4 @@
+thefuzz[speedup]
+PyAudio
+SpeechRecognition
+pyttsx3
