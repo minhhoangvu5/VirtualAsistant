@@ -46,16 +46,23 @@ if __name__ == '__main__':
 
     with sr.Microphone() as source:
         recognizer.adjust_for_ambient_noise(source)
-        say("What information that you want to know?")
-        print("Listening")
-        audio = recognizer.listen(source)
-        try:
-            question = recognizer.recognize_google(audio, language='en')
-            print(question)
-            answer = find_answer(question, questions, answers)
-            say(answer)
-            say("Do you have ...")
-        except sr.UnknownValueError:
-            print("Don't know!!!")
-        except sr.RequestError:
-            print("Network Error!!!")
+        while True:
+            say("What information that you want to know?")
+            print("Listening")
+            audio = recognizer.listen(source, timeout=8)
+            try:
+                question = recognizer.recognize_google(audio, language='en')
+                print(question)
+                answer = find_answer(question, questions, answers)
+                say(answer)
+                say("Do you want to continue? Please say YES or NO!")
+                print("Listening")
+                audio = recognizer.listen(source, timeout=8)
+                question = recognizer.recognize_google(audio, language='en')
+                if 'yes' not in question.lower():
+                    say("Bye. Have a good time!")
+                    break
+            except sr.UnknownValueError:
+                print("Don't know!!!")
+            except sr.RequestError:
+                print("Network Error!!!")
